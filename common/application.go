@@ -22,6 +22,7 @@ func NewApplication(dsn string) (*Application, error) {
 		return nil, err
 	}
 	router := gin.New()
+	router.StaticFile("/lib.js", "./common/lib.js")
 	return &Application{
 		DB:     db,
 		Router: router,

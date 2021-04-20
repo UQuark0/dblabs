@@ -47,7 +47,7 @@ func main() {
 		panic(err)
 	}
 
-	app.Router.StaticFile("/", "./index.html")
+	app.Router.StaticFile("/", "./lab1/index.html")
 	app.Router.GET("/all", GetAll(app))
 
 	err = app.Router.Run(":8080")
