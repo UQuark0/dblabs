@@ -1,0 +1,112 @@
+<html>
+
+<head>
+    <title>Лаба №1, Бігдан А. І.</title>
+
+    <style>
+        table, tr, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        table {
+            margin-bottom: 20px;
+        }
+
+        th {
+            background-color: lightgray;
+        }
+
+        th, td {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .null {
+            color: gray;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+    <h3>Лаба №1, Бігдан А. І.</h3>
+    <div id="lab"></div>
+    <h3>Відповіді на контрольні запитання</h3>
+    <ol>
+        <li>include() використовується для включення зовнішнього файлу у скрипт</li>
+        <li>mysqli_connect() створює з'єднання з сервером баз даних</li>
+        <li>mysqli_select_db() передає серверу інформацію про обрану базу даних</li>
+        <li>mysqli_query() виконує запрос до сервера баз даних</li>
+        <li>mysqli_fetch_array() повертає дані запису у вигляді масиву</li>
+        <li>while - це такий цикл, що повторяє виконання коду в тілі, поки умова у дужках виконується</li>
+        <li>Асоціативний масив - це масив, індексами якого є не цілі числа, а будь-які дані або структури даних</li>
+        <li>Див. попередній пункт</li>
+        <li>Тому що присвоєння у PHP є виразом, що дорівнює присвоєнному значенню. Таким чином, цикл працює, доки не буде присвоєно null, тобто кінець записів.</li>
+    </ol>
+
+    Код до цієї лаби можна подивитися <a href="https://github.com/UQuark0/dblabs">тут</a>
+
+    <script>
+        function generateTable(data) {
+            if (data.length === 0)
+                return null;
+
+            let headObject = data[0];
+
+            let table = document.createElement("table");
+            let headRow = document.createElement("tr");
+
+            table.appendChild(headRow);
+
+            for (let name in headObject) {
+                let th = document.createElement("th")
+                th.innerText = name;
+                headRow.appendChild(th);
+            }
+
+            for (let row of data) {
+                let tr = document.createElement("tr");
+                for (let field in row) {
+                    let value = row[field];
+                    let td = document.createElement("td");
+
+                    if (value) {
+                        td.innerText = value;
+                    } else {
+                        td.innerHTML = `<div class="null">null</div>`
+                    }
+
+                    tr.appendChild(td);
+                }
+                table.appendChild(tr);
+            }
+
+            return table;
+        }
+
+        let lab = document.getElementById("lab");
+
+        let request = new XMLHttpRequest();
+        request.open("GET", "/all");
+
+        request.onload = function (e) {
+            if (request.readyState === 4 && request.status === 200) {
+                let object = JSON.parse(request.responseText);
+
+                lab.appendChild(generateTable(object.Products));
+                lab.appendChild(generateTable(object.Fats));
+                lab.appendChild(generateTable(object.Infos));
+                lab.appendChild(generateTable(object.Sales));
+            }
+        }
+
+        request.onerror = function (e) {
+            console.log(e);
+        }
+
+        request.send(null);
+    </script>
+</body>
+
+</html>
