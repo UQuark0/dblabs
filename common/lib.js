@@ -34,3 +34,59 @@ function generateTable(data) {
 
     return table;
 }
+
+function generateInputForm(data) {
+    if (data.length === 0)
+        return null;
+
+    let form = document.createElement("form");
+
+    for (let name in data) {
+        let label = document.createElement("div")
+        label.innerText = name;
+
+        form.appendChild(label);
+
+        let input = document.createElement("input");
+        input.type = "text";
+        input.name = name;
+        form.appendChild(input);
+    }
+
+    return form;
+}
+
+function clear(node) {
+    while (node.hasChildNodes()) {
+        clear(node.firstChild)
+    }
+    node.parentNode.removeChild(node);
+}
+
+function clearChildren(node) {
+    while (node.hasChildNodes()) {
+        clear(node.firstChild)
+    }
+}
+
+function getFormValues(form) {
+    let result = {};
+    for (let child of form.children) {
+        if (child.tagName !== "INPUT")
+            continue;
+
+        if (child.value === "") {
+            result[child.name] = null;
+            continue
+        }
+
+        let number = parseFloat(child.value);
+
+        if (isNaN(number)) {
+            result[child.name] = child.value;
+        } else {
+            result[child.name] = number;
+        }
+    }
+    return result;
+}

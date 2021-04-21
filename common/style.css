@@ -20,3 +20,7 @@ th, td {
     color: gray;
     font-style: italic;
 }
+
+.error {
+    color: darkred;
+}

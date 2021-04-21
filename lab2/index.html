@@ -1,0 +1,100 @@
+<html>
+
+<head>
+    <title>Лаба №2, Бігдан А. І.</title>
+
+    <script src="/lib.js"></script>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+<h3>Лаба №2, Бігдан А. І.</h3>
+
+<select id="table" onchange="tableSelected()">
+    <option value="fat">fat</option>
+    <option value="info">info</option>
+    <option value="product">product</option>
+    <option value="sale">sale</option>
+</select>
+
+<select id="action" onchange="actionSelected()">
+    <option value="select">SELECT</option>
+    <option value="insert">INSERT</option>
+    <option value="update">UPDATE</option>
+</select>
+
+<br>
+
+<div id="data"></div>
+
+<button onclick="perform()">Perform</button>
+
+<br>
+<br>
+
+<div id="response"></div>
+
+<h3>Відповіді на контрольні запитання</h3>
+<ol>
+</ol>
+
+Код до цієї лаби можна подивитися <a href="https://github.com/UQuark0/dblabs">тут</a>
+
+<script>
+    let inputForm;
+
+    function tableSelected() {
+        let select = document.getElementById("table");
+
+        let data = document.getElementById("data");
+
+        let request = new XMLHttpRequest();
+        request.open("GET", `/model?name=${select.value}`);
+
+        request.onload = function (e) {
+            if (request.readyState === 4 && request.status === 200) {
+                clearChildren(data);
+                inputForm = generateInputForm(JSON.parse(request.responseText));
+                data.appendChild(inputForm);
+            }
+        }
+
+        request.send(null);
+    }
+
+    function actionSelected() {
+
+    }
+
+    function perform() {
+        let action = document.getElementById("action");
+        let table = document.getElementById("table");
+
+        let response = document.getElementById("response")
+
+        let request = new XMLHttpRequest();
+
+        request.open("POST", `/${table.value}/${action.value}`);
+
+        request.onload = function (e) {
+            if (request.readyState === 4) {
+                if (request.status >= 200 && request.status < 300) {
+                    clearChildren(response);
+                    response.appendChild(generateTable([JSON.parse(request.responseText)]));
+                } else {
+                    response.innerHTML = `<div class="error">${request.responseText}</div>`;
+                }
+            }
+        }
+
+        request.send(JSON.stringify(getFormValues(inputForm)));
+    }
+
+    tableSelected();
+    actionSelected();
+</script>
+
+</body>
+
+</html>
