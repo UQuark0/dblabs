@@ -1,0 +1,155 @@
+<html>
+
+<head>
+    <title>Лаба №3, Бігдан А. І.</title>
+
+    <script src="/lib.js"></script>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+<h3>Лаба №3, Бігдан А. І.</h3>
+
+<form id="register">
+    Username
+    <br>
+    <input type="text" name="Username">
+    <br>
+    Password
+    <br>
+    <input type="text" name="Password">
+    <br>
+    Repeat password
+    <br>
+    <input type="text" name="RepeatPassword">
+    <br>
+    Allow SELECT
+    <input type="checkbox" name="AllowSelect">
+    <br>
+    Allow UPDATE
+    <input type="checkbox" name="AllowUpdate">
+    <br>
+    Allow INSERT
+    <input type="checkbox" name="AllowInsert">
+    <br>
+    Allow DELETE
+    <input type="checkbox" name="AllowDelete">
+    <br>
+</form>
+
+<button onclick="register()">Register</button>
+
+<br>
+<br>
+
+<div id="register-result"></div>
+
+<form id="login">
+    Username
+    <br>
+    <input type="text" name="Username">
+    <br>
+    Password
+    <br>
+    <input type="text" name="Password">
+    <br>
+</form>
+
+<button onclick="login()">Login</button>
+
+<br>
+<br>
+
+<div id="login-result"></div>
+
+<div id="users"></div>
+
+<div id="lab"></div>
+<h3>Відповіді на контрольні запитання</h3>
+<ol>
+    <li>Ідентифікація - це процес пошуку користувача у системі, верифікація - перевірка, чи дійсно той користувач намагається отримати доступ (наприклад, за допомогою пароля)</li>
+    <li>password_hash() - це функція, яка дозволяє отримати посолений хеш пароля у стандартизованому вигляді</li>
+    <li>Сіль - це випадкова строка, що конкатенується з хешем пароля, після чого отримана строка знов хешується. Сіль потрібна для захисту від атаки типу "перебір за словником"</li>
+    <li>Сесія - це поняття, що описує процес роботи користувача і дозволяє виконувати запроси без необхідності логінитись кожен раз. А також сесія - це найбільший головний біль студента</li>
+    <li>Метод POST потрібен для передачі даних на сервер, метод GET потрібен для завантаження даних з серверу</li>
+    <li>Кляуза GRANT використовується у SQL, щоб надати довільному користувачу права на деякі операції над деякими таблицями</li>
+    <li>?</li>
+</ol>
+
+Код до цієї лаби можна подивитися <a href="https://github.com/UQuark0/dblabs">тут</a>
+
+<script>
+    function fetchUsers() {
+        let users = document.getElementById("users");
+        clearChildren(users);
+
+        let request = new XMLHttpRequest();
+
+        request.open("GET", "/users");
+        request.onload = function (e) {
+            if (request.readyState === 4) {
+                if (request.status >= 200 && request.status < 300) {
+                    users.appendChild(generateTable(JSON.parse(request.responseText)));
+                } else {
+                    users.innerHTML = `<div class="error">${request.responseText}</div>`;
+                }
+            }
+        }
+        request.send(null);
+    }
+
+    function register() {
+        let data = getFormValues(document.getElementById("register"));
+        let result = document.getElementById("register-result");
+        clearChildren(result);
+        if (data.Password !== data.RepeatPassword) {
+            result.innerHTML = `<div class="error">Passwords don't match</div>`;
+            return;
+        }
+
+        let request = new XMLHttpRequest();
+        request.open("POST", "/register");
+
+        request.onload = function (e) {
+            if (request.readyState === 4) {
+                if (request.status >= 200 && request.status < 300) {
+                    result.appendChild(generateTable([JSON.parse(request.responseText)]));
+                } else {
+                    result.innerHTML = `<div class="error">${request.responseText}</div>`;
+                }
+            }
+            fetchUsers();
+        }
+
+        request.send(JSON.stringify(data));
+    }
+
+    function login() {
+        let data = getFormValues(document.getElementById("login"));
+        let result = document.getElementById("login-result");
+        clearChildren(result);
+
+        let request = new XMLHttpRequest();
+        request.open("POST", "/login");
+
+        request.onload = function (e) {
+            if (request.readyState === 4) {
+                if (request.status >= 200 && request.status < 300) {
+                    result.appendChild(generateTable([JSON.parse(request.responseText)]));
+                } else {
+                    result.innerHTML = `<div class="error">${request.responseText}</div>`;
+                }
+            }
+            fetchUsers();
+        }
+
+        request.send(JSON.stringify(data));
+    }
+
+    fetchUsers();
+</script>
+
+</body>
+
+</html>

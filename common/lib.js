@@ -21,7 +21,7 @@ function generateTable(data) {
             let value = row[field];
             let td = document.createElement("td");
 
-            if (value) {
+            if (value !== null && value !== undefined) {
                 td.innerText = value;
             } else {
                 td.innerHTML = `<div class="null">null</div>`
@@ -48,7 +48,15 @@ function generateInputForm(data) {
         form.appendChild(label);
 
         let input = document.createElement("input");
-        input.type = "text";
+        if (typeof data[name] === "number") {
+            input.type = "number";
+        }
+        if (typeof data[name] === "string") {
+            input.type = "text";
+        }
+        if (typeof data[name] === "boolean") {
+            input.type = "checkbox";
+        }
         input.name = name;
         form.appendChild(input);
     }
@@ -74,18 +82,27 @@ function getFormValues(form) {
     for (let child of form.children) {
         if (child.tagName !== "INPUT")
             continue;
-
         if (child.value === "") {
             result[child.name] = null;
             continue
         }
 
-        let number = parseFloat(child.value);
-
-        if (isNaN(number)) {
+        if (child.type === "text") {
             result[child.name] = child.value;
-        } else {
-            result[child.name] = number;
+        }
+
+        if (child.type === "number") {
+            let number = parseFloat(child.value);
+
+            if (isNaN(number)) {
+                result[child.name] = child.value;
+            } else {
+                result[child.name] = number;
+            }
+        }
+
+        if (child.type === "checkbox") {
+            result[child.name] = child.checked;
         }
     }
     return result;
