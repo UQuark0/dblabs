@@ -8,46 +8,48 @@
 </head>
 
 <body>
-    <h3>Лаба №1, Бігдан А. І.</h3>
-    <div id="lab"></div>
-    <h3>Відповіді на контрольні запитання</h3>
-    <ol>
-        <li>include() використовується для включення зовнішнього файлу у скрипт</li>
-        <li>mysqli_connect() створює з'єднання з сервером баз даних</li>
-        <li>mysqli_select_db() передає серверу інформацію про обрану базу даних</li>
-        <li>mysqli_query() виконує запрос до сервера баз даних</li>
-        <li>mysqli_fetch_array() повертає дані запису у вигляді масиву</li>
-        <li>while - це такий цикл, що повторяє виконання коду в тілі, поки умова у дужках виконується</li>
-        <li>Асоціативний масив - це масив, індексами якого є не цілі числа, а будь-які дані або структури даних</li>
-        <li>Див. попередній пункт</li>
-        <li>Тому що присвоєння у PHP є виразом, що дорівнює присвоєнному значенню. Таким чином, цикл працює, доки не буде присвоєно null, тобто кінець записів.</li>
-    </ol>
 
-    Код до цієї лаби можна подивитися <a href="https://github.com/UQuark0/dblabs">тут</a>
+<h3>Лаба №1, Бігдан А. І.</h3>
+<div id="lab"></div>
+<h3>Відповіді на контрольні запитання</h3>
+<ol>
+    <li>include() використовується для включення зовнішнього файлу у скрипт</li>
+    <li>mysqli_connect() створює з'єднання з сервером баз даних</li>
+    <li>mysqli_select_db() передає серверу інформацію про обрану базу даних</li>
+    <li>mysqli_query() виконує запрос до сервера баз даних</li>
+    <li>mysqli_fetch_array() повертає дані запису у вигляді масиву</li>
+    <li>while - це такий цикл, що повторяє виконання коду в тілі, поки умова у дужках виконується</li>
+    <li>Асоціативний масив - це масив, індексами якого є не цілі числа, а будь-які дані або структури даних</li>
+    <li>Див. попередній пункт</li>
+    <li>Тому що присвоєння у PHP є виразом, що дорівнює присвоєнному значенню. Таким чином, цикл працює, доки не буде присвоєно null, тобто кінець записів.</li>
+</ol>
 
-    <script>
-        let lab = document.getElementById("lab");
+Код до цієї лаби можна подивитися <a href="https://github.com/UQuark0/dblabs">тут</a>
 
-        let request = new XMLHttpRequest();
-        request.open("GET", "/all");
+<script>
+    let lab = document.getElementById("lab");
 
-        request.onload = function (e) {
-            if (request.readyState === 4 && request.status === 200) {
-                let object = JSON.parse(request.responseText);
+    let request = new XMLHttpRequest();
+    request.open("GET", "/all");
 
-                lab.appendChild(generateTable(object.Products));
-                lab.appendChild(generateTable(object.Fats));
-                lab.appendChild(generateTable(object.Infos));
-                lab.appendChild(generateTable(object.Sales));
-            }
+    request.onload = function (e) {
+        if (request.readyState === 4 && request.status === 200) {
+            let object = JSON.parse(request.responseText);
+
+            lab.appendChild(generateTable(object.Products));
+            lab.appendChild(generateTable(object.Fats));
+            lab.appendChild(generateTable(object.Infos));
+            lab.appendChild(generateTable(object.Sales));
         }
+    }
 
-        request.onerror = function (e) {
-            console.log(e);
-        }
+    request.onerror = function (e) {
+        console.log(e);
+    }
 
-        request.send(null);
-    </script>
+    request.send(null);
+</script>
+
 </body>
 
 </html>

@@ -23,18 +23,22 @@ func GetAll(app *common.Application) gin.HandlerFunc {
 		err := app.DB.Find(&response.Products).Error
 		if err != nil {
 			ctx.String(http.StatusInternalServerError, "%s", err.Error())
+			return
 		}
 		err = app.DB.Find(&response.Fats).Error
 		if err != nil {
 			ctx.String(http.StatusInternalServerError, "%s", err.Error())
+			return
 		}
 		err = app.DB.Find(&response.Infos).Error
 		if err != nil {
 			ctx.String(http.StatusInternalServerError, "%s", err.Error())
+			return
 		}
 		err = app.DB.Find(&response.Sales).Error
 		if err != nil {
 			ctx.String(http.StatusInternalServerError, "%s", err.Error())
+			return
 		}
 
 		ctx.JSON(http.StatusOK, response)
